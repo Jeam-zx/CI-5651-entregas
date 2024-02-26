@@ -160,25 +160,25 @@ def eval(state):
         row = state.board[i]
         col = [state.board[j][i] for j in range(3)]
         # Check if the current row or column contains two '+' and one '-
-        if row.count('+') == 2 and row.count('-') == 1 or col.count('+') == 2 and col.count('-') == 1:
+        if row.count('+') == 2 and row.count('|') == 1 or col.count('+') == 2 and col.count('|') == 1:
             # If the current player is the player 1, it could win in its next turn
             return 5
-        if row.count('+') == 2 and row.count('|') == 1 or col.count('+') == 2 and col.count('|') == 1:
+        if row.count('+') == 2 and row.count('-') == 1 or col.count('+') == 2 and col.count('-') == 1:
             # If the current player is the player 2, it could win in its next turn
             return -5
 
-        if row.count('+') == 1 and row.count('-') == 1 or col.count('+') == 1 and col.count('-') == 1:
+        if row.count('+') == 1 and row.count('|') == 1 or col.count('+') == 1 and col.count('|') == 1:
             # If the current player is the player 1, it could make a cross in its next turn
             return 3
-        if row.count('+') == 1 and row.count('|') == 1 or col.count('+') == 1 and col.count('|') == 1:
+        if row.count('+') == 1 and row.count('-') == 1 or col.count('+') == 1 and col.count('-') == 1:
             # If the current player is the player 2, it could make a cross in its next turn
             return -3
 
-        if row.count('+') == 0 and row.count('-') == 1 or col.count('+') == 0 and col.count('-') == 1:
+        if row.count('+') == 0 and row.count('|') == 1 or col.count('+') == 0 and col.count('|') == 1:
             # If the current player is the player 1, it could make a cross in its next turn
             return 1
 
-        if row.count('+') == 0 and row.count('|') == 1 or col.count('+') == 0 and col.count('|') == 1:
+        if row.count('+') == 0 and row.count('-') == 1 or col.count('+') == 0 and col.count('-') == 1:
             # If the current player is the player 2, it could make a cross in its next turn
             return -1
 
@@ -188,24 +188,24 @@ def eval(state):
     sec_diag = [state.board[i][2 - i] for i in range(3)]
     # Check if the main diagonal contains two '+' and one '-'
 
-    if main_diag.count('+') == 2 and main_diag.count('-') == 1 or sec_diag.count('+') == 2 and sec_diag.count('-') == 1:
+    if main_diag.count('+') == 2 and main_diag.count('|') == 1 or sec_diag.count('+') == 2 and sec_diag.count('|') == 1:
         # If the current player is the player 1, it could win in its next turn
         return 5
-    if main_diag.count('+') == 2 and main_diag.count('|') == 1 or sec_diag.count('+') == 2 and sec_diag.count('|') == 1:
+    if main_diag.count('+') == 2 and main_diag.count('-') == 1 or sec_diag.count('+') == 2 and sec_diag.count('-') == 1:
         # If the current player is the player 2, it could win in its next turn
         return -5
 
-    if main_diag.count('+') == 1 and main_diag.count('-') == 1 or sec_diag.count('+') == 1 and sec_diag.count('-') == 1:
+    if main_diag.count('+') == 1 and main_diag.count('|') == 1 or sec_diag.count('+') == 1 and sec_diag.count('|') == 1:
         # If the current player is the player 1, it could make a cross in its next turn
         return 3
-    if main_diag.count('+') == 1 and main_diag.count('|') == 1 or sec_diag.count('+') == 1 and sec_diag.count('|') == 1:
+    if main_diag.count('+') == 1 and main_diag.count('-') == 1 or sec_diag.count('+') == 1 and sec_diag.count('-') == 1:
         # If the current player is the player 2, it could make a cross in its next turn
         return -3
 
-    if main_diag.count('+') == 0 and main_diag.count('-') == 1 or sec_diag.count('+') == 0 and sec_diag.count('-') == 1:
+    if main_diag.count('+') == 0 and main_diag.count('|') == 1 or sec_diag.count('+') == 0 and sec_diag.count('|') == 1:
         # If the current player is the player 1, it could make a cross in its next turn
         return 1
-    if main_diag.count('+') == 0 and main_diag.count('|') == 1 or sec_diag.count('+') == 0 and sec_diag.count('|') == 1:
+    if main_diag.count('+') == 0 and main_diag.count('-') == 1 or sec_diag.count('+') == 0 and sec_diag.count('-') == 1:
         # If the current player is the player 2, it could make a cross in its next turn
         return -1
 

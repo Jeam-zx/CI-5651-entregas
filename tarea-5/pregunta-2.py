@@ -1,5 +1,6 @@
 import sys
 from queue import Queue
+from math import isqrt
 
 
 class BipGraph(object):
@@ -26,7 +27,7 @@ class BipGraph(object):
     dfs(vertex):
         Performs Depth-First Search on the graph.
     hopcroft_karp():
-        Finds the maximum matching with a new restriction of the graph using the Hopcroft-Karp algorithm.
+        Finds the maximum matching of the graph using the Hopcroft-Karp algorithm.
     """
 
     def __init__(self, left_vertices, right_vertices):
@@ -142,16 +143,12 @@ class BipGraph(object):
 
     def hopcroft_karp(self):
         """
-        Finds the maximum matching of the graph using the Hopcroft-Karp algorithm with a complement restriction:
-
-        If a node u in one set is matched to a node v in the other set, and another
-        node x in the other set has the same value as u, then x cannot also be
-        matched. A value can only be matched once.
+        Finds the maximum matching of the graph using the Hopcroft-Karp algorithm
 
         Returns
         -------
         int
-            The size of the maximum matching with the complement restriction.
+            The size of the maximum matching.
         """
         # Initialize the matching for the left and right sets of vertices
         # The matching for a vertex is the vertex it is matched with
@@ -162,9 +159,6 @@ class BipGraph(object):
         # The distance for a vertex is the shortest distance to a free vertex
         self.distances = [0 for _ in range(self.left_vertices + 1)]
 
-        # Initialize a list to keep track of visited vertices
-        visited = [False for _ in range(self.left_vertices + 1)]
-
         # Initialize the size of the maximum matching
         matching = 0
 
@@ -174,13 +168,8 @@ class BipGraph(object):
             for u in range(1, self.left_vertices + 1):
                 # If the vertex is free and there is an augmenting path from the vertex
                 if self.matching_in_left[u] == 0 and self.dfs(u):
-                    # If the vertex and its matched vertex have not been visited
-                    if not visited[u] and not visited[self.matching_in_left[u]]:
-                        # Mark the vertex and its matched vertex as visited
-                        visited[u] = True
-                        visited[self.matching_in_left[u]] = True
-                        # Increase the size of the maximum matching
-                        matching += 1
+                    # Update the size of the maximum matching
+                    matching += 1
 
         # Return the size of the maximum matching
         return matching
@@ -200,23 +189,18 @@ def is_prime(n):
     bool
         True if the number is prime, False otherwise.
     """
-    if n <= 1:
-        # If the number is less than or equal to 1, it is not prime, so return False
+    # If the number is less than 2, it is not prime
+    if n < 2:
         return False
-    if n <= 3:
-        # If the number is less than or equal to 3, it is prime, so return True
-        return True
-    if n % 2 == 0 or n % 3 == 0:
-        # If the number is divisible by 2 or 3, it is not prime, so return False
-        return False
-    i = 5
-    while i * i <= n:
-        # Check divisibility by numbers from 5 to sqrt(n)
-        if n % i == 0 or n % (i + 2) == 0:
-            # If the number is divisible by i or i + 2, it is not prime, so return False
+
+    # Check divisibility for all numbers up to the biggest integer less
+    # than or equal to the square root of n plus 1
+    for i in range(2, isqrt(n) + 1):
+        # If n is divisible by any number, it is not prime
+        if n % i == 0:
             return False
-        i += 6
-    # If none of the above conditions are met, the number is prime, so return True
+
+    # If no divisors found, n is prime
     return True
 
 
@@ -234,15 +218,20 @@ def min_numbers_to_remove(c):
     int
         The minimum number of elements to remove.
     """
-    # Create a bipartite graph with vertices representing the elements of the list
-    n = len(c)
-    g = BipGraph(n, n)
+    # Create two different sets of elements, one for even numbers and one for odd numbers
+    p = [x for x in C if x % 2 == 0]
+    i = [x for x in C if x % 2 == 1]
+
+    # Create a bipartite graph with the two sets of elements
+    g = BipGraph(len(p), len(i))
     # Iterate over all pairs of elements in the list
-    for i in range(1, n + 1):
-        for j in range(i + 1, n + 1):
-            # If the sum of two elements is a prime number, add an edge between their corresponding vertices
-            if is_prime(c[i - 1] + c[j - 1]):
-                g.add_edge(i, j)
+    for p_ in p:
+        for i_ in i:
+            # If the sum of the pair is prime
+            if is_prime(p_ + i_):
+                # Add an edge between the pair of elements in the graph, if the sum is prime.
+                # The graph is 1-indexed, so we add 1 to the indices
+                g.add_edge(p.index(p_) + 1, i.index(i_) + 1)
     # Find the maximum matching of the graph
     max_matching = g.hopcroft_karp()
     # Return the size of the maximum matching

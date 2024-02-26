@@ -143,40 +143,73 @@ def eval(state):
 
     Returns
     -------
-    float
-        The evaluation of the state. Returns 1 if the current state is a winning configuration for the first player,
-        -1 if it's a winning configuration for the second player, 0.5 if the first player could win in the next turn,
-        -0.5 if the second player could win in the next turn, and 0 for all other states.
+    int
+        The evaluation of the state. If is desirable for the first player, the evaluation is positive. If is desirable
+        for the second player, the evaluation is negative. If the state is neutral, the evaluation is 0.
     """
     # Check if the current state is a winning configuration
     if state.is_end_state():
-        # If the current state is a winning configuration, return 1 if the current player is the first player and -1
+        # If the current state is a winning configuration, return 10 if the current player is the first player and -10
         # if it's the second player
-        return 1 if state.player == 1 else -1
+        return 10 if state.player == 1 else -10
 
-    # Check for potential win in the next turn
+    # Check for potential win in the next turns
     # Iterate over all rows and columns of the board
     for i in range(3):
         # Get the current row and column
         row = state.board[i]
         col = [state.board[j][i] for j in range(3)]
-        # Check if the current row or column contains two '+' and no '-'
-        if row.count('+') == 2 and row.count('-') == 0 or col.count('+') == 2 and col.count('-') == 0:
-            # If the current player could win in the next turn, return 0.5 if the current player is the first player
-            # and -0.5 if it's the second player
-            return 0.5 if state.player == 1 else -0.5
+        # Check if the current row or column contains two '+' and one '-
+        if row.count('+') == 2 and row.count('-') == 1 or col.count('+') == 2 and col.count('-') == 1:
+            # If the current player is the player 1, it could win in its next turn
+            return 5
+        if row.count('+') == 2 and row.count('|') == 1 or col.count('+') == 2 and col.count('|') == 1:
+            # If the current player is the player 2, it could win in its next turn
+            return -5
 
-    # Get the main diagonal and the secondary diagonal
-    diag1 = [state.board[i][i] for i in range(3)]
-    diag2 = [state.board[i][2 - i] for i in range(3)]
-    # Check if the main diagonal or the secondary diagonal contains two '+' and no '-'
-    if diag1.count('+') == 2 and diag1.count('-') == 0 or diag2.count('+') == 2 and diag2.count('-') == 0:
-        # If the current player could win in the next turn, return 0.5 if the current player is the first player and
-        # -0.5 if it's the second player
-        return 0.5 if state.player == 1 else -0.5
+        if row.count('+') == 1 and row.count('-') == 1 or col.count('+') == 1 and col.count('-') == 1:
+            # If the current player is the player 1, it could make a cross in its next turn
+            return 3
+        if row.count('+') == 1 and row.count('|') == 1 or col.count('+') == 1 and col.count('|') == 1:
+            # If the current player is the player 2, it could make a cross in its next turn
+            return -3
 
-    # If the current state is not a winning configuration and the current player could not win in the next turn,
-    # return 0
+        if row.count('+') == 0 and row.count('-') == 1 or col.count('+') == 0 and col.count('-') == 1:
+            # If the current player is the player 1, it could make a cross in its next turn
+            return 1
+
+        if row.count('+') == 0 and row.count('|') == 1 or col.count('+') == 0 and col.count('|') == 1:
+            # If the current player is the player 2, it could make a cross in its next turn
+            return -1
+
+    # Check for potential win in the next turns in the diagonals
+    # Get the main and secondary diagonals
+    main_diag = [state.board[i][i] for i in range(3)]
+    sec_diag = [state.board[i][2 - i] for i in range(3)]
+    # Check if the main diagonal contains two '+' and one '-'
+
+    if main_diag.count('+') == 2 and main_diag.count('-') == 1 or sec_diag.count('+') == 2 and sec_diag.count('-') == 1:
+        # If the current player is the player 1, it could win in its next turn
+        return 5
+    if main_diag.count('+') == 2 and main_diag.count('|') == 1 or sec_diag.count('+') == 2 and sec_diag.count('|') == 1:
+        # If the current player is the player 2, it could win in its next turn
+        return -5
+
+    if main_diag.count('+') == 1 and main_diag.count('-') == 1 or sec_diag.count('+') == 1 and sec_diag.count('-') == 1:
+        # If the current player is the player 1, it could make a cross in its next turn
+        return 3
+    if main_diag.count('+') == 1 and main_diag.count('|') == 1 or sec_diag.count('+') == 1 and sec_diag.count('|') == 1:
+        # If the current player is the player 2, it could make a cross in its next turn
+        return -3
+
+    if main_diag.count('+') == 0 and main_diag.count('-') == 1 or sec_diag.count('+') == 0 and sec_diag.count('-') == 1:
+        # If the current player is the player 1, it could make a cross in its next turn
+        return 1
+    if main_diag.count('+') == 0 and main_diag.count('|') == 1 or sec_diag.count('+') == 0 and sec_diag.count('|') == 1:
+        # If the current player is the player 2, it could make a cross in its next turn
+        return -1
+
+    # If we can't infer anything from the current state, return 0
     return 0
 
 
@@ -280,13 +313,14 @@ def main():
     n = 9
     # Call the `first_player` function to get the result of the game
     result = first_player(state, n, -float('inf'), float('inf'))
-    # If the result is 0, increase the depth and call the `first_player` function again until the result is not 0.
-    while result == 0:
+    # If the result is 0, increase the depth and call the `first_player` function again until the result is not 10
+    # or -10.
+    while result != 10 and result != -10:
         n += 1
         result = first_player(state, n, -float('inf'), float('inf'))
 
     # Print the winner and the maximum number of moves
-    if result == 1:
+    if result > 0:
         print("Gana el primer jugador en maximo", n, "movimientos.")
     else:
         print("Gana el segundo jugador en maximo", n, "movimientos.")

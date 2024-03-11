@@ -1,7 +1,9 @@
 from functools import cmp_to_key
 
+
 # Graham's scan algorithm to find the convex hull of a set of points is based on the following resources:
 # https://www.geeksforgeeks.org/convex-hull-using-graham-scan/
+
 def left_index(points):
     """
     Function to find the point with the lowest x-coordinate. If there are multiple points with the same x-coordinate,
@@ -143,4 +145,3 @@ def iterative_graham_scan(points):
 # Test the function
 p = [(0, 3), (1, 1), (2, 2), (4, 4), (0, 0), (1, 2), (3, 1), (3, 3)]
 print(iterative_graham_scan(p))  # Output: 2
-

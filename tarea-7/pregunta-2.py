@@ -110,7 +110,7 @@ def graham_scan(points):
         m += 1
 
     if m < 3:
-        return
+        return points
 
     stack = [points[0], points[1], points[2]]
 
@@ -133,15 +133,25 @@ def iterative_graham_scan(points):
     int: The number of convex hulls found.
     """
     hulls = []
+    # The while loop will take O(n) iterations, where n is the number of points.
     while points:
+        # The graham_scan function will take O(n log n) time, where n is the number of points.
         hull = graham_scan(points)
-        if not hull or hull == points:
-            break
+        # Append the convex hull to the list of hulls will take O(n) time.
         hulls.append(hull)
-        points = [p for p in points if p not in hull]
+        # A set is a red-black tree, so create the sets and difference operation will take O(n log n) time.
+        points = set(points) - set(hull)
+        # Convert the set back to a list will take O(n) time.
+        points = list(points)
+    # The total time complexity of this function is O(n^2 log n).
+    # The space complexity is O(n) for the list of hulls.
     return len(hulls)
 
 
 # Test the function
 p = [(0, 3), (1, 1), (2, 2), (4, 4), (0, 0), (1, 2), (3, 1), (3, 3)]
-print(iterative_graham_scan(p))  # Output: 2
+p2 = [(0, 3)]
+p3 = [(1, 3), (-2, 3), (-2, 2), (-2, 1), (-2, 0), (-1, 0), (0, 0), (1, 0), (2, 0), (2, 1), (2, 2), (2, 3)]
+print(iterative_graham_scan(p))  # Output: 3
+print(iterative_graham_scan(p2))  # Output: 1
+print(iterative_graham_scan(p3))  # Output: 3

@@ -37,12 +37,6 @@ def longest_prefix_suffix(x):
     str: The longest proper prefix of the input string which is also a suffix. If no such prefix exists,
     it returns an empty string.
     """
-
-    # Add a character (We assume that # doesn't appear in x) to the middle of the string. This is done to prevent the
-    # kmpPre function from skipping all the characters when the entire string is a repeated letter. We know that the
-    # longest proper prefix which is also a suffix cannot be longer than half the length of the string, because a longer
-    # prefix would not leave enough characters for a matching suffix.
-    x = x[:len(x) // 2] + "#" + x[len(x) // 2:] 
     b = kmpPre(x)
     if b[-1] != 0:
         return x[:b[-1] + 1]
@@ -55,6 +49,7 @@ def longest_prefix_suffix(x):
 # Test the function
 print(longest_prefix_suffix("ABRACADABRA"))  # Output: "ABRA"
 print(longest_prefix_suffix("AREPERA"))  # Output: "A"
-print(longest_prefix_suffix("LLLL"))  # Output: "LL"
+print(longest_prefix_suffix("LLLL"))  # Output: "LLL"
+print(longest_prefix_suffix("AAAAA"))  # Output: "AAAA"
 print(longest_prefix_suffix("ALGORITMO"))  # Output: ""
 print(longest_prefix_suffix("ABCDABCD"))  # Output: "ABCD"

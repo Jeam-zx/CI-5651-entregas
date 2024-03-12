@@ -28,8 +28,6 @@ def longest_prefix_suffix(x):
     longest proper prefix which is also a suffix for the entire string if b[-1] != 0. If b[-1] == 0,  it checks if
     the first and last characters of the string are the same, else it returns an empty string.
 
-    It then returns the longest such prefix for the entire string.
-
     Parameters:
     x (str): The input string.
 

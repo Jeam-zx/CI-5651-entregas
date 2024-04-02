@@ -88,18 +88,18 @@ def main():
     # At the beginning, the minimum distance is 0
     trick.add(minimal_points[0][1], 0)
     # Initialize the last line queried to 0
-    trick.last = 0
+    trick.last, distance = 0
 
     # Query the minimum distance for each minimal point
     for x, y in minimal_points:
         # Query the minimum distance for the current minimal point
-        cost = trick.query(x)
+        distance = trick.query(x)
         if minimal_points.index((x, y)) < len(minimal_points) - 1:
             trick.add(minimal_points[minimal_points.index((x, y)) + 1][1], cost)
 
     # At this point, we only have used the convex hull trick to find the
     # minimum distance without considering the partitions, as we know this takes O(nlogn) time
-    print(f"The minimum distance is: {cost}")
+    print(f"The minimum distance is: {distance}")
 
     # Now, we will find the partitions, given the representative points of each partition
     representative_points = []

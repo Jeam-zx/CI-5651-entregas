@@ -95,7 +95,7 @@ def main():
         # Query the minimum distance for the current minimal point
         distance = trick.query(x)
         if minimal_points.index((x, y)) < len(minimal_points) - 1:
-            trick.add(minimal_points[minimal_points.index((x, y)) + 1][1], cost)
+            trick.add(minimal_points[minimal_points.index((x, y)) + 1][1], distance)
 
     # At this point, we only have used the convex hull trick to find the
     # minimum distance without considering the partitions, as we know this takes O(nlogn) time

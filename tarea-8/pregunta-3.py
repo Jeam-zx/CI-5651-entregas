@@ -11,10 +11,10 @@
 
 class ConvexHullTrick:
     def __init__(self):
-        self.last = None # Last line index queried
-        self.M = [] # Slopes
-        self.B = [] # Intercepts
-        self.considered_points = [] # Considered points in the trick
+        self.last = None  # Last line index queried
+        self.M = []  # Slopes
+        self.B = []  # Intercepts
+        self.considered_points = []  # Considered points in the trick
 
     def is_line_redundant(self, l1, l2, l3):
         """
@@ -27,7 +27,7 @@ class ConvexHullTrick:
         bool: True if the line is redundant, False otherwise.
         """
         return (self.B[l3] - self.B[l1]) * (self.M[l1] - self.M[l2]) < (self.B[l2] - self.B[l1]) * (
-                    self.M[l1] - self.M[l3])
+                self.M[l1] - self.M[l3])
 
     def add(self, m, b):
         """
@@ -55,12 +55,16 @@ class ConvexHullTrick:
         Returns:
         int: The minimum value of the trick at x.
         """
+        # If the last line queried is greater than the number of lines, we set it to the last line
         if self.last >= len(self.M):
             self.last = len(self.M) - 1
-        while self.last < len(self.M) - 1 and self.M[self.last + 1] * x + self.B[self.last + 1] < self.M[
-            self.last] * x + self.B[self.last]:
+        # Find the line that gives the minimum value at x
+        while (self.last < len(self.M) - 1 and
+               self.M[self.last + 1] * x + self.B[self.last + 1] < self.M[self.last] * x + self.B[self.last]):
             self.last += 1
+        # Add the considered point to the list
         self.considered_points.append((x, self.M[self.last]))
+        # Return the minimum value at x
         return self.M[self.last] * x + self.B[self.last]
 
 
@@ -72,6 +76,9 @@ def main():
     # Read the points
     for i in range(n):
         x, y = map(int, input().split())
+        # It is not necessary to consider the points in the third and fourth quadrants
+        # because the distance between two points is the same as the distance between the points reflected
+        x, y = abs(x), abs(y)
         points.append((x, y))
     # Sort the points in ascending order based on their x coordinates
     points.sort()
@@ -131,13 +138,12 @@ def main():
             i += 1
         else:
             j += 1
-            print(f"j: {j}")
 
     # Finally, the whole process will take O(nlogn) time.
     for i, partition in enumerate(partitions):
         print(f"Partition {i}: ", end="")
-        for height, width in partition:
-            print(f"({height}, {width}) ", end="")
+        for x, y in partition:
+            print(f"({x}, {y}) ", end="")
         print()
 
 

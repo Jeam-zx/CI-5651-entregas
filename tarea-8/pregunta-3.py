@@ -76,8 +76,10 @@ def main():
     # Read the points
     for i in range(n):
         x, y = map(int, input().split())
-        # It is not necessary to consider the points in the third and fourth quadrants
-        # because the distance between two points is the same as the distance between the points reflected
+        # It is not necessary to consider the points that have an x or y coordinate less than 0, as the distance
+        # between two points is always positive and the distance between two points with negative coordinates is the
+        # same as the distance between two points with positive coordinates. So, we can reflect the points with
+        # negative coordinates over the x and y axes and the result will be the same.
         x, y = abs(x), abs(y)
         points.append((x, y))
     # Sort the points in ascending order based on their x coordinates
